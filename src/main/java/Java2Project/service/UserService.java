@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -24,8 +25,8 @@ public class UserService {
     }
 
 
-    public User findById(Long id){
-        return userRepository.findById(id).get();
+    public Optional<User> findById(Long id){
+        return userRepository.findById(id);
     }
 
 
@@ -39,11 +40,17 @@ public class UserService {
     }
 
     @Transactional
-    public User ModifyUsername(RequestUser requestUser){
-        User user = userRepository.findById(requestUser.id()).get();
-        user.setUsername(requestUser.username());
-        userRepository.save(user);
-        return user;
+    public Optional<User> ModifyUsername(RequestUser requestUser){
+        Optional<User> user = userRepository.findById(requestUser.id());
+
+        if(user.isPresent()){
+            user.get().setUsername(requestUser.username());
+            userRepository.save(user.get());
+            return user;
+        }
+        else{
+            return Optional.empty();
+        }
     }
 
 
