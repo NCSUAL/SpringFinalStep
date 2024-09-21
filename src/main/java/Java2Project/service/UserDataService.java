@@ -43,25 +43,17 @@ public class UserDataService {
     }
 
     @Transactional
-    public Optional<UserData> ModifyContent(RequestUserData requestUserData){
-        Optional<User> user = userRepository.findByUsername(requestUserData.username());
-        if(user.isPresent()){
-            Optional<UserData> userdata = user.get().getUserdatas()
-                    .stream()
-                    .filter(userData -> userData.getId().equals(requestUserData.userData_id()))
-                    .findAny();
+    public UserData ModifyContent(RequestUserData requestUserData){
+        int updateContent = userDataRepository.updateContentByIdAndUsername(
+                requestUserData.content(),
+                requestUserData.userData_id(),
+                requestUserData.username());
 
-            if(userdata.isPresent()){
-                userdata.get().setContent(requestUserData.content());
-                return userdata;
-            }
-            else{
-               return Optional.empty();
-            }
-        }
-        else{
-            return Optional.empty();
-        }
+
+        log.info("{}", (updateContent ==0? "업데이트가 안됨": "정상적으로 됨") );
+
+
+        return userDataRepository.findById(requestUserData.userData_id()).get();
     }
 
     @Transactional
