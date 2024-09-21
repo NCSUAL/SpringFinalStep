@@ -13,9 +13,9 @@ import java.util.Optional;
 @Repository
 public interface UserDataRepository extends JpaRepository<UserData,Long> {
 
-//    @Modifying  //수정,삭제,삽입 쿼리
-//    @Query("UPDATE UserData ud set ud.content = :content WHERE ud.id = :id AND ud.user.username = :username")
-//    int updateContentByIdAndUsername(@Param("content") String content,@Param("id") Long id,@Param("username") String username);
+    @Modifying  //수정,삭제,삽입 쿼리
+    @Query("UPDATE UserData ud set ud.content = :content WHERE ud.id = :id AND ud.user.username = :username")
+    int updateContentByIdAndUsername(@Param("content") String content,@Param("id") Long id,@Param("username") String username);
 
     @Query("select ud from UserData ud WHERE ud.user.username = :username")
     List<UserData> findByUsername(@Param("username") String username);
